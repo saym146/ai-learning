@@ -19,7 +19,7 @@ ai-learning/
 │   │   ├── chat_loop_with_tools.py
 │   │   └── chat_loop_with_tools.md
 │   └── agentic/
-│       └── chat_agent_with_tools.py
+│       └── chat_loop_with_tools_agent.py
 │
 ├── tools/
 │   ├── __init__.py
@@ -34,26 +34,26 @@ ai-learning/
 ## File & Folder Index
 
 ### langchain/non-agentic/
-- **chat_loop_with_tools.py**  
+- [chat_loop_with_tools.py](langchain/non-agentic/chat_loop_with_tools.py)  
 	Implements a basic chat loop using AI models, without agentic features. Demonstrates how to interact with models and use tools directly.
-- **chat_loop_with_tools.md**  
+- [chat_loop_with_tools.md](langchain/non-agentic/chat_loop_with_tools.md)  
 	Documentation and notes for the non-agentic chat loop.
 
 ### langchain/agentic/
-- **chat_agent_with_tools.py**  
+- [chat_loop_with_tools_agent.py](langchain/agentic/chat_loop_with_tools_agent.py)  
 	Shows how to build an agent that can use tools to solve problems, demonstrating agentic capabilities.
 
 ### tools/
-- **__init__.py**  
+- [__init__.py](tools/__init__.py)  
 	Initializes the tools module.
-- **weather.py**  
+- [weather.py](tools/weather.py)  
 	Example tool for fetching weather information, usable by both non-agentic and agentic approaches.
 
 ### tests/
-- **test_langchain_first_handson.py**  
+- [test_langchain_first_handson.py](tests/test_langchain_first_handson.py)  
 	Contains unit tests for the initial LangChain hands-on exercises and code.
 
-### readme.md
+### [readme.md](readme.md)
 - This file (you are reading it!) provides an overview, structure, and guidance for the repository.
 
 ---
