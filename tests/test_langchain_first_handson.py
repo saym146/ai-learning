@@ -1,29 +1,45 @@
 import importlib.util
 import sys
+import os
 from types import SimpleNamespace
 import pytest
 
-# Dynamically import the module with a hyphen in the filename
-MODULE_PATH = 'c:/Kajer/Projects/ai-learning/langchain-first-handson.py'
-SPEC = importlib.util.spec_from_file_location('langchain_first_handson', MODULE_PATH)
+# Ensure the project root is on sys.path so `from tools import ...` works at import time
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+# Dynamically import the module
+MODULE_PATH = os.path.join(os.path.dirname(__file__), '..', 'langchain', 'non-agentic', 'chat_loop_with_tools.py')
+SPEC = importlib.util.spec_from_file_location('chat_loop_with_tools', MODULE_PATH)
 module = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(module)
 
 
 class FakeResponse:
-    def __init__(self, text: str):
+    """Mimics a LangChain AIMessage with text, usage_metadata, and tool_calls."""
+    def __init__(self, text: str, tool_calls=None):
         self.text = text
+        self.tool_calls = tool_calls or []
+        self.usage_metadata = {
+            "input_tokens": 10,
+            "output_tokens": 5,
+            "total_tokens": 15,
+        }
+
+    def copy(self):
+        return {"role": "assistant", "content": self.text}
 
 
 class FakeModel:
     def __init__(self, responder=None):
-        # responder: Callable[[list[dict]], str]
+        # responder: Callable[[list], str]
         self.calls = []
         self._responder = responder or (lambda conv: f"echo: {conv[-1]['content']}")
 
     def invoke(self, conversation):
-        self.calls.append([m.copy() for m in conversation])
+        self.calls.append(list(conversation))
         return FakeResponse(self._responder(conversation))
 
 
@@ -56,14 +72,16 @@ def test_chat_once_appends_and_returns_text(conversation):
     m = FakeModel()
     out = module.chat_once(m, conversation, 'Hello')
     assert out is not None and out.startswith('echo: ')
-    # Conversation should have user then assistant appended
-    assert conversation[-2] == {"role": "user", "content": "Hello"}
+    # Conversation: system, user, response (raw), assistant
+    assert conversation[1] == {"role": "user", "content": "Hello"}
     assert conversation[-1]["role"] == "assistant"
     assert conversation[-1]["content"] == out
 
 
 def test_chat_once_handles_response_without_text_attr(monkeypatch, conversation):
     class Resp:
+        tool_calls = []
+        usage_metadata = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
         def __str__(self):
             return 'fallback to str'
     class ModelNoText(FakeModel):
@@ -80,7 +98,7 @@ def test_run_chat_session_multiple_turns_and_skips_empty():
     assert outs == ['echo: Hi', 'echo: There']
     # Ensure model was invoked exactly for non-empty inputs
     assert len(m.calls) == 2
-    # Each call includes growing conversation with system + turns
+    # First call should start with the system message
     assert m.calls[0][0]['role'] == 'system'
 
 
