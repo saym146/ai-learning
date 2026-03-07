@@ -27,8 +27,13 @@ ai-learning/
 │   └── weather.py
 │
 ├── tests/
-│   └── test_langchain_first_handson.py
+│   └── langchain/
+│       ├── non-agentic/
+│       │   └── test_chat_loop_with_tools.py
+│       └── agentic/
+│           └── test_chat_loop_with_tools_agent.py
 │
+├── requirements.txt
 └── readme.md
 ```
 
@@ -47,14 +52,14 @@ ai-learning/
 	Documentation and notes for the agentic chat loop.
 
 ### tools/
-- [__init__.py](tools/__init__.py)  
-	Initializes the tools module.
 - [weather.py](tools/weather.py)  
 	Example tool for fetching weather information, usable by both non-agentic and agentic approaches.
 
 ### tests/
-- [test_langchain_first_handson.py](tests/test_langchain_first_handson.py)  
-	Contains unit tests for the initial LangChain hands-on exercises and code.
+- [test_chat_loop_with_tools.py](tests/langchain/non-agentic/test_chat_loop_with_tools.py)  
+	Unit tests for the non-agentic chat loop.
+- [test_chat_loop_with_tools_agent.py](tests/langchain/agentic/test_chat_loop_with_tools_agent.py)  
+	Unit tests for the agentic chat loop.
 
 ---
 

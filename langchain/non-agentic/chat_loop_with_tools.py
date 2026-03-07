@@ -1,6 +1,13 @@
 import os
+import sys
 from typing import Iterable, List, Dict, Optional
 from langchain.chat_models import init_chat_model
+
+# Ensure the project root is on sys.path so `tools` can be imported
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 from tools import get_weather  # tool example import
 
 SYSTEM_PROMPT = (
@@ -105,9 +112,7 @@ def run_chat_session(
 
 
 def main() -> None:
-    # Do not hardcode API keys in code in production. Respect existing environment.
-    os.environ.setdefault("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY", ""))
-    essential_model_name = "google_genai:gemini-2.0-flash"
+    essential_model_name = "ollama:gpt-oss:20b"
 
     model = init_model(essential_model_name)
     model_with_tools = model.bind_tools([get_weather])

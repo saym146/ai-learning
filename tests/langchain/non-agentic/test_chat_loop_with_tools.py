@@ -5,12 +5,12 @@ from types import SimpleNamespace
 import pytest
 
 # Ensure the project root is on sys.path so `from tools import ...` works at import time
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 # Dynamically import the module
-MODULE_PATH = os.path.join(os.path.dirname(__file__), '..', 'langchain', 'non-agentic', 'chat_loop_with_tools.py')
+MODULE_PATH = os.path.join(PROJECT_ROOT, 'langchain', 'non-agentic', 'chat_loop_with_tools.py')
 SPEC = importlib.util.spec_from_file_location('chat_loop_with_tools', MODULE_PATH)
 module = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
