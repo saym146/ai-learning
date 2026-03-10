@@ -11,7 +11,7 @@ if PROJECT_ROOT not in sys.path:
 from tools import get_weather  # tool example import
 
 SYSTEM_PROMPT = (
-    "You are a helpful weather assistant that replies in a concise manner. Not more than 20 words"
+    "You are a helpful weather assistant that replies in a concise manner. Not more than 50 words"
 )
 
 
